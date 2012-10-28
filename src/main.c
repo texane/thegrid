@@ -137,7 +137,7 @@ static int try_match_ncons_rule(const rule_t* r, const grid_t* g)
 
 static rule_t* make_ncons_rule(void)
 {
-  static const unsigned int ncons = 3;
+  static const unsigned int ncons = 4;
 
   rule_t* const rule = malloc(sizeof(rule_t));
 
