@@ -93,7 +93,6 @@ typedef struct rule
     struct
     {
       unsigned int n;
-      unsigned int dir;
     } ncons;
   } u;
 
@@ -117,22 +116,19 @@ static int try_match_ncons_rule(const rule_t* r, const grid_t* g)
   {
     for (j = 0; j < g->n; ++j)
     {
-      if ((g->n - j) < r->u.ncons.n) break ;
-
-      k = 0;
-
-      if (r->u.ncons.dir == 0) /* horizontal */
+      /* horizontal */
+      if ((g->n - i) >= r->u.ncons.n)
       {
-	while (*grid_const_at(g, j + k, i) != BLOCK_COLOR_INVALID)
-	  if ((++k) == r->u.ncons.n) return 0;
-      }
-      else /* vertical */
-      {
-	while (*grid_const_at(g, i, j + k) != BLOCK_COLOR_INVALID)
-	  if ((++k) == r->u.ncons.n) return 0;
+	for (k = 0; *grid_const_at(g, j + k, i) != BLOCK_COLOR_INVALID; ++k)
+	  if (k == (r->u.ncons.n - 1)) return 0;
       }
 
-      j += k;
+      /* vertical */
+      if ((g->n - j) >= r->u.ncons.n)
+      {
+	for (k = 0; *grid_const_at(g, i, j + k) != BLOCK_COLOR_INVALID; ++k)
+	  if (k == (r->u.ncons.n - 1)) return 0;
+      }
     }
   }
 
@@ -141,15 +137,14 @@ static int try_match_ncons_rule(const rule_t* r, const grid_t* g)
 
 static rule_t* make_ncons_rule(void)
 {
+  static const unsigned int ncons = 3;
+
   rule_t* const rule = malloc(sizeof(rule_t));
-  unsigned int ncons = 3;
-  static int fubar = 0;
 
   rule->next = NULL;
   rule->outcome = ncons;
   rule->try_match = try_match_ncons_rule;
   rule->u.ncons.n = ncons;
-  rule->u.ncons.dir = fubar++;
 
   return rule;
 }
@@ -161,10 +156,6 @@ static void rulset_init(rulset_t* rulset)
   rulset->rules = NULL;
 
   /* generate some rules */
-
-  rule = make_ncons_rule();
-  rule->next = rulset->rules;
-  rulset->rules = rule;
 
   rule = make_ncons_rule();
   rule->next = rulset->rules;
@@ -379,15 +370,15 @@ static void bfs_do
   {
     redo_grid(n, &g);
 
-#if 0
-    grid_print(&g);
-    printf("\n");
-    fflush(stdout);
-#endif
-
     if (r->try_match(r, &g) == 0)
     {
+#if 1
       printf("found\n");
+      grid_print(&g);
+      printf("\n");
+      fflush(stdout);
+#endif
+
       for (b->dist = 1; n->parent; n = n->parent, ++b->dist) ;
       break ;
     }
@@ -531,7 +522,7 @@ int main(int ac, char** av)
   const rule_t* ru;
   unsigned int i;
 
-  grid_init(&g, 8);
+  grid_init(&g, 5);
   state_init(&state);
   rulset_init(&rulset);
 
