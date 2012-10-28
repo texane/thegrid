@@ -1,0 +1,66 @@
+kolb, will you find the rules?
+
+[ introduction ]
+
+game based on basic elements and rule generator
+
+at the beginning of a party, you do not know the rule. you have to discover by yourself
+and exploit them to increase your score. when a rule is discovered, it is replaced by
+one another. once discovered, rules have outcomes: score is increased, color are added,
+time slows down ... for some rules, outcomes are masked.
+
+[ basic elments ]
+
+basic elements are colored blocks. the player starts with a given number of block per
+color. the grid is made of cells that can host a block. a cursor is movable over a grid
+to put blocks inside empty cells. blocks on the grid can be taken back in player inventory.
+in a multiplayer mode, rules are the same for both players. players do not share the same
+screen.
+
+[ game controls ]
+
+color selection, can be any (or none)
+put button
+take back button
+
+group cells, then
+ -> take back
+ -> put
+
+
+[ rule matching indicator ]
+
+number of possible plays to match a given rule: require to evaluate, foreach cell, the
+distance of a given rule and keep the nearest one
+
+
+[ examples of rules ]
+
+rules are all made with the following: if_condition_is_met then execute_statements;
+
+simple rules:
+if game_starts, then time is N seconds
+if game_starts, then inventory is {R red, G green, B blue} blocks
+if score_is(N), then game_ends
+if red_is_put, then time accelerates
+if 4 blocks aligned, then increase the score
+if 4 blocks aligned, then decrease the score
+form a shape with blocks
+put a block at a distance of N of another block
+put a red block near a green one turn it into green one
+
+if a color is surround by another a color
+
+aggregate rules
+put a red block at a distance less than N from a red block AND more than M from a blue block
+
+[ rule editor mode ]
+
+allow to design a party with a given set of rules.
+
+[ rule saving mode ]
+
+[ todo ]
+
+list outcomes
+list basic rules
